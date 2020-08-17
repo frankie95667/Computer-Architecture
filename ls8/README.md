@@ -60,6 +60,18 @@ but you'll have to implement those three above instructions first!
 ## Step 0: IMPORTANT: inventory what is here!
 
 * Make a list of files here.
+  * cpu.py
+  * ls8.py
+  * examples / 
+    * call.ls8
+    * interrupts.ls8
+    * keyboard.ls8
+    * mult.ls8
+    * print8.ls8
+    * printstr.ls8
+    * sctest.ls8
+    * stack.ls8
+    * stackoverflow.ls8
 * Write a short 3-10-word description of what each file does.
 * Note what has been implemented, and what hasn't.
 * Read this whole file.

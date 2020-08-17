@@ -2,12 +2,25 @@
 
 import sys
 
+LDI = 0b10000010
+PRN = 0b01000111
+HLT = 0b00000001
+
 class CPU:
     """Main CPU class."""
 
     def __init__(self):
         """Construct a new CPU."""
-        pass
+        self.pc = 0
+        self.ram = [0] * 256
+        self.reg = [0] * 8
+        self.running = False
+    
+    def ram_read(self, index):
+        return self.ram[index]
+
+    def ram_write(self, index, value):
+        self.ram[index] = value
 
     def load(self):
         """Load a program into memory."""
@@ -62,4 +75,15 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
+        self.running = True
+        while self.running:
+            self.trace()
+            if self.ram_read(self.pc) == LDI:
+                self.reg[self.ram_read(self.pc + 1)] = self.ram_read(self.pc + 2)
+                self.pc += 3
+            elif self.ram_read(self.pc) == PRN:
+                print(self.reg[self.ram_read(self.pc + 1)])
+                self.pc += 2
+            elif self.ram_read(self.pc) == HLT:
+                self.running = False
+
