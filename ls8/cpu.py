@@ -1,6 +1,7 @@
 """CPU functionality."""
 
 import sys
+from datetime import datetime
 
 NOP = 0b00000000
 
@@ -115,8 +116,29 @@ class CPU:
     def run(self):
         """Run the CPU."""
         self.running = True
+        current_time = datetime.now().timestamp()
         while self.running:
-            # self.trace()
+            self.trace()
+            if current_time + 1 <= datetime.now().timestamp():
+                current_time = datetime.now().timestamp()
+                if self.reg[5]:
+                    self.reg[6] = 1
+            
+            if self.reg[6] == 1:
+                masked_interrupts = self.reg[5] & self.reg[6]
+
+                for i in range(8):
+                    interrupt_happened = ((masked_interrupts >> i) & 1) == 1
+
+                    if interrupt_happened:
+                        self.alu("DEC", 7, None)
+                        self.ram_write(self.pc, self.reg[7])
+                        self.alu("DEC", 7, None)
+                        self.ram_write(self.fl, self.reg[7])
+                        for reg in self.reg:
+                            self.alu("DEC", 7, None)
+                            self.ram_write(reg, self.reg[7])
+
             IR = self.ram_read(self.pc)
             num_of_operands = (IR >> 6) + 1
             operand_a, operand_b = self.ram_read(self.pc + 1), self.ram_read(self.pc + 2)
@@ -125,6 +147,8 @@ class CPU:
                 self.reg[operand_a] = operand_b
             elif IR == PRN:
                 print(self.reg[operand_a])
+            elif IR == PRA:
+                print(chr(self.reg[operand_a]))
             elif IR == MUL:
                 self.alu("MUL", operand_a, operand_b)
             elif IR == PUSH:
@@ -135,9 +159,15 @@ class CPU:
                 self.alu("INC", 7, None)
             elif IR == CALL:
                 self.alu("DEC", 7, None)
-                self.ram_write(self.reg[operand_a], self.reg[7])
+                self.ram_write(self.pc + 1, self.reg[7])
                 self.pc = self.reg[operand_a]
-                self
+            elif IR == RET:
+                self.pc = self.ram_read(self.reg[7])
+                self.alu("INC", 7, None)
+            elif IR == ST:
+                self.ram_write(self.reg[operand_b], self.reg[operand_a])
+            elif IR == JMP:
+                self.pc = self.reg[operand_a]
             elif IR == HLT:
                 self.running = False
             self.pc += num_of_operands
