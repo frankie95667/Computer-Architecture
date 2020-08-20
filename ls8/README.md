@@ -60,6 +60,18 @@ but you'll have to implement those three above instructions first!
 ## Step 0: IMPORTANT: inventory what is here!
 
 * Make a list of files here.
+  * cpu.py - CPU class
+  * ls8.py - loads and runs CPU
+  * examples / 
+    * call.ls8 - calls multiple subroutines
+    * interrupts.ls8 - watches for interrupts
+    * keyboard.ls8 - watches for keyboard commands
+    * mult.ls8 - multiplies two numbers
+    * print8.ls8 - prints number 8
+    * printstr.ls8 - prints" Hello, World!"
+    * sctest.ls8 - performs multiple tests
+    * stack.ls8 - add and removes instructions from stack
+    * stackoverflow.ls8 - simulatetes stackoverflow error
 * Write a short 3-10-word description of what each file does.
 * Note what has been implemented, and what hasn't.
 * Read this whole file.
